@@ -1,16 +1,17 @@
 import csv
 import operator
 
+import twitter
 from collections import Counter
 
 
 users={
-	'name':[None]*20,
-	'numOfFollowers':[None]*20,
-	'retweet':[None]*20,
-    'date':[None]*20,
-    'hour': [None]*20,
-    'twtperhour':[None]*20
+	'name':[None]*twitter.getNum(),
+	'numOfFollowers':[None]*twitter.getNum(),
+	'retweet':[None]*twitter.getNum(),
+    'date':[None]*twitter.getNum(),
+    'hour': [None]*twitter.getNum(),
+    'twtperhour':[None]*twitter.getNum()
 }
 def find_str(s, char):
     index = 0
@@ -33,17 +34,19 @@ def getHour(s):
    return int(getTime(s)[0:2])
 i=0
 counter=0
-with open('Donald Trump Syria.txt',encoding='utf-8') as file:
+fileName=twitter.getFile()
+with open(fileName,encoding='utf-8') as file:
 
     reader= csv.reader(file, delimiter=' ')
     for line in reader:
         list=line
-        print (line)
+
+        print ('i is '+str(i))
+        print (list)
         users['name'][i]=list[0]
         users['numOfFollowers'][i] = list[len(list)-2]
         users['retweet'][i] = list[len(list)-1]
         users['date'][i]=list[1]
-        print(users['date'][i])
         users['hour'][i]=getHour(users['date'][i])
         users['twtperhour'][i] = 0
 
@@ -130,15 +133,20 @@ print(minhour)
 for minhour in range(minhour,maxhour+1):
         resetrate(users['twtperhour'])
         list = []
+        list2=[]
         for i in range(0,len(users['hour'])):
 
             if (int(users['hour'][i])==int(minhour)):
 
                 list.append(users['name'][i])
+                list2.append(i)
 
         a=nameCounter(list)
-        for z in range(0, len(users['twtperhour'])):
+        print(a)
+        for z in list2:
+
             users['twtperhour'][z]=a[users['name'][z]]
+
 
 
 
@@ -151,7 +159,7 @@ bubbleSort(users['twtperhour'],users['numOfFollowers'],users['name'],users['hour
 
 with open('tweetperhour_sorted.txt', 'w') as text:
 
-    for s in range(i):
+    for s in range(0,len(users['twtperhour'])):
         text.write(str(s+1)+' '+ users['name'][s]+ ' '+str(users['twtperhour'][s])+'\n')
 
 
