@@ -1,6 +1,7 @@
 import tweepy
 import time
 import os
+import textblob as blob
 ACCESS_TOKEN = os.environ.get('TWITTER_ACCESS_TOKEN')
 ACCESS_SECRET = os.environ.get('TWITTER_ACCESS_TOKEN_SECRET')
 CONSUMER_KEY = os.environ.get('TWITTER_CONSUMER_KEY')
@@ -20,7 +21,7 @@ i=0;
 
 f = open(INPUT_FILE_PATH, 'w', encoding='utf-8')
 
-for res in tweepy.Cursor(api.search, q=SEARCH, rpp=100, count=20, result_type="recent", since = FROM,until =TO, include_entities=True, lang="en").items(num):
+for res in tweepy.Cursor(api.search, q=SEARCH, rpp=100, count=num, result_type="recent", since = FROM,until =TO, include_entities=True, lang="en").items(num):
 	i+=1
 	f.write(res.user.screen_name)
 	f.write(' ')
@@ -29,7 +30,9 @@ for res in tweepy.Cursor(api.search, q=SEARCH, rpp=100, count=20, result_type="r
 	f.write(']')	
 	f.write(" ")
 	f.write('"')
-	f.write(res.text.replace('\n',''))
+	tweet=res.text.replace('\n', '')
+	print(res.user.screen_name +'\'s sentiment is : '+str(blob.TextBlob(tweet).sentiment))
+	f.write(tweet)
 	f.write('"')
 	f.write(" ")
 	f.write(str(res.user.followers_count))

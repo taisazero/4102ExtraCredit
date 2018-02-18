@@ -3,6 +3,7 @@ import operator
 
 import twitter
 from collections import Counter
+from collections import defaultdict
 
 
 users={
@@ -53,8 +54,22 @@ with open(fileName,encoding='utf-8') as file:
 
         i+=1
 
-print (users)
-
+print ('Length of users '+ str(len(users['name'])))
+list=[]
+temp_dic=defaultdict(lambda :0)
+for i in range(0,len(users['name'])):
+    if(users['name'][i] not in list):
+        list.append(users['name'][i])
+        temp_dic[users['name'][i]]=1
+    else:
+        temp_dic[users['name'][i]] +=1
+i=0
+with open('overallposts_sorted.txt', 'w') as text:
+    text.write('UserName    \t Num of Posts\n')
+    for key, value in sorted(temp_dic.items(), key=lambda item: (item[1], item[0])):
+        text.write(str(i)+'\t'+key+'\t'+str(value))
+        text.write('\n')
+        i+=1
 
 def bubbleSort(alist,list1,list2,list3,list4,list5):
     print(len(alist))
